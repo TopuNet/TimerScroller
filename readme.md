@@ -15,7 +15,7 @@
 
 requireJS引用
 
-        TimerScroller.TimerScroller
+        依赖TimerScroller.js，成功后返回对象TimerScroller
         默认依赖zepto，/dist/TimerScroller.js最下面的define可以改为jquery.min.js#1.x.x
 
 功能配置及启用：
