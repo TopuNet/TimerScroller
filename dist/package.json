@@ -1,6 +1,6 @@
 {
-  "name": "TopuNet-CalendarScroller",
-  "version": "1.0.4",
+  "name": "TopuNet-TimerScroller",
+  "version": "1.1.1",
   "description": "Topu.net 移动端日历弹层滚轮选择插件",
   "main": "Readme.md",
   "scripts": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/TopuNet/CalendarScroller.git"
+    "url": "git+https://github.com/TopuNet/TimerScroller.git"
   },
   "keywords": [
     "topu.net"
@@ -16,7 +16,7 @@
   "author": "Topu.net",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/TopuNet/CalendarScroller/issues"
+    "url": "https://github.com/TopuNet/TimerScroller/issues"
   },
-  "homepage": "https://github.com/TopuNet/CalendarScroller#readme"
+  "homepage": "https://github.com/TopuNet/TimerScroller#readme"
 }
