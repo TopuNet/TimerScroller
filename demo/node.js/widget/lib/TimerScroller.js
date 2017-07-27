@@ -1,5 +1,5 @@
 /*
-    时间弹层滚轮选择插件 v1.1.1
+    时间弹层滚轮选择插件 v1.1.2
     npm install TopuNet-TimerScroller
     高京
     2017-05-23
@@ -62,7 +62,8 @@ var TimerScroller_func = function() {
                 .css("display", "none")
                 .css("position", "fixed")
                 .css("top", "0")
-                .css("left", "0");
+                .css("left", "0")
+                .css("z-index", "6000");
             $("body").append(window.TimerScroller_dom_bg);
 
             // 时间框
@@ -152,27 +153,28 @@ var TimerScroller_func = function() {
                 .css("margin", 0);
             window.TimerScroller_dom_calendar.append(window.TimerScroller_dom_bottom_button_ul);
 
-            // 底部按钮-确定
-            window.TimerScroller_dom_bottom_button_confirm = $(document.createElement("li"))
+            // 底部按钮-取消
+            window.TimerScroller_dom_bottom_button_cancel = $(document.createElement("li"))
                 .css("float", "left")
                 .css("width", "50%")
                 .css("height", "11.5vw")
                 .css("line-height", "12vw")
-                .css("color", "rgb(23,181,228)")
+                .css("color", "rgb(180,180,180)")
                 .css("font-size", "4.5vw")
                 .css("text-align", "center")
                 .css("border-top", "solid 1px #dbdbdb")
                 .css("border-right", "solid 1px #dbdbdb")
-                .text("确定");
-            window.TimerScroller_dom_bottom_button_ul.append(window.TimerScroller_dom_bottom_button_confirm);
-
-            // 底部按钮-取消
-            window.TimerScroller_dom_bottom_button_cancel = window.TimerScroller_dom_bottom_button_confirm.clone();
-            window.TimerScroller_dom_bottom_button_cancel
-                .css("border-right", "none")
-                .css("width", "49%")
                 .text("取消");
             window.TimerScroller_dom_bottom_button_ul.append(window.TimerScroller_dom_bottom_button_cancel);
+
+            // 底部按钮-确定
+            window.TimerScroller_dom_bottom_button_confirm = window.TimerScroller_dom_bottom_button_cancel.clone();
+            window.TimerScroller_dom_bottom_button_confirm
+                .css("border-right", "none")
+                .css("width", "49%")
+                .css("color", "rgb(23,181,228)")
+                .text("确定");
+            window.TimerScroller_dom_bottom_button_ul.append(window.TimerScroller_dom_bottom_button_confirm);
         },
         // 插入时间中的li和title
         insertDom_li: function() {
@@ -185,8 +187,8 @@ var TimerScroller_func = function() {
                 .css("color", "rgb(23,181,228)")
                 .css("text-align", "center")
                 .css("border-bottom", "solid 1px rgb(23,181,228)")
-                .text(this.getTitleDefault());
-            window.TimerScroller_dom_calendar.prepend(window.TimerScroller_dom_calendar_title);
+                .text(this.getTitleDefault())
+                .prependTo(window.TimerScroller_dom_calendar);
 
             // 时间选项
             window.TimerScroller_dom_calendar_li = $(document.createElement("li"))
@@ -198,7 +200,7 @@ var TimerScroller_func = function() {
                 .css("padding", 0)
                 .css("border", 0)
                 // .css("border","solid 1px #ff0000")
-                .css("color", "rgb(0,0,0)");
+                .css("color", "rgb(23,181,228)");
             var i, len, _obj;
 
             i = 0;
@@ -210,8 +212,8 @@ var TimerScroller_func = function() {
                 if (this.Paras.data.hour[i] < 10)
                     _str += "0";
                 _str += this.Paras.data.hour[i];
-                _obj.text(_str);
-                window.TimerScroller_dom_calendar_ul_hour.append(_obj);
+                _obj.text(_str)
+                    .appendTo(window.TimerScroller_dom_calendar_ul_hour);
             }
 
             i = 0;
@@ -223,22 +225,22 @@ var TimerScroller_func = function() {
                 if (this.Paras.data.minute[i] < 10)
                     _str += "0";
                 _str += this.Paras.data.minute[i];
-                _obj.text(_str);
-
-                window.TimerScroller_dom_calendar_ul_minute.append(_obj);
+                _obj.text(_str)
+                    .appendTo(window.TimerScroller_dom_calendar_ul_minute);
             }
 
             i = 0;
             len = 2;
             for (; i < len; i++) {
-                _obj = window.TimerScroller_dom_calendar_li.clone();
-                window.TimerScroller_dom_calendar_ul_hour.prepend(_obj);
-                _obj = window.TimerScroller_dom_calendar_li.clone();
-                window.TimerScroller_dom_calendar_ul_hour.append(_obj);
-                _obj = window.TimerScroller_dom_calendar_li.clone();
-                window.TimerScroller_dom_calendar_ul_minute.prepend(_obj);
-                _obj = window.TimerScroller_dom_calendar_li.clone();
-                window.TimerScroller_dom_calendar_ul_minute.append(_obj);
+                _obj = window.TimerScroller_dom_calendar_li.clone()
+                    .prependTo(window.TimerScroller_dom_calendar_ul_hour);
+                _obj = window.TimerScroller_dom_calendar_li.clone()
+                    .appendTo(window.TimerScroller_dom_calendar_ul_hour);
+
+                _obj = window.TimerScroller_dom_calendar_li.clone()
+                    .prependTo(window.TimerScroller_dom_calendar_ul_minute);
+                _obj = window.TimerScroller_dom_calendar_li.clone()
+                    .appendTo(window.TimerScroller_dom_calendar_ul_minute);
             }
         },
         // 设置滚动
@@ -351,6 +353,7 @@ var TimerScroller_func = function() {
         },
         // 阻止窗口背景层滚动（弹层时阻止，关闭层时恢复）
         window_scroll_prevent: function(e) {
+            // console.log("here", e.target);
             e.preventDefault();
         },
         // 显示弹层
@@ -367,10 +370,11 @@ var TimerScroller_func = function() {
 
             window.TimerScroller_dom_bg.fadeIn(500, function() {
 
-                $(window).on("touchmove", _this.window_scroll_prevent);
+                $(this).on("touchmove", _this.window_scroll_prevent);
 
                 // li高度
-                _this.calendar_li_height_px = window.TimerScroller_dom_calendar_ul_hour.find("li").css("height").replace("vw", "") * $(window).width() / 100;
+                //_this.calendar_li_height_px = window.TimerScroller_dom_calendar_ul_hour.find("li").css("height").replace("vw", "") * $(window).width() / 100;
+                _this.calendar_li_height_px = window.TimerScroller_dom_calendar_ul_hour.find("li").get(0).style.height.replace("vw", "") * $(window).width() / 100;
 
                 // 设置滚动
                 // _this.resetAll.apply(_this);
