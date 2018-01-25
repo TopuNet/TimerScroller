@@ -1,4 +1,4 @@
-# 移动端时间弹层滚轮选择插件 v1.1.2
+# 移动端时间弹层滚轮选择插件 v1.1.3
 ### 安装：npm install TopuNet-TimerScroller
 
 文件结构：
@@ -29,12 +29,12 @@ requireJS引用
                 default_hour: dt.getHours(), //默认小时
                 default_minute: 0, //默认分钟
             },
-            // 点击确定的回调。确定时系统自动调用resetAll()重置
+            // 点击确定的回调。
             /*
                 result = {
-                    title: window_calendar_title.text().replace(" : ",":"),
-                    hour: 0,
-                    minute: 0
+                    title: "12:30",
+                    hour: 12,
+                    minute: 30
                 }
             */
             callback_confirm: function(result) {
@@ -43,7 +43,7 @@ requireJS引用
 
                 // Do Sth.
             },
-            // 点击取消的回调。取消时系统自动调用resetAll()重置
+            // 点击取消的回调。
             callback_cancel: function() {
                 TimerScroller.close();
             }
@@ -51,7 +51,7 @@ requireJS引用
 
         TimerScroller.show(opt);
 
-2. 关闭弹层：
+2. 关闭弹层，自动调用resetAll()重置jroll对象：
         
         TimerScroller.close();
 
@@ -61,6 +61,10 @@ requireJS引用
 
 更新日志：
 -------------
+v1.1.3
+
+        1. 确定和取消的回调不再自动调用resetAll()，在close()中自动调用resetAll()。
+
 v1.1.2
 
         1. 修改了一个偶发性bug。

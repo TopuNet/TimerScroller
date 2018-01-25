@@ -1,5 +1,5 @@
 /*
-    时间弹层滚轮选择插件 v1.1.2
+    时间弹层滚轮选择插件 v1.1.3
     npm install TopuNet-TimerScroller
     高京
     2017-05-23
@@ -18,22 +18,20 @@ var TimerScroller_func = function() {
                     default_hour: dt.getHours(), //默认小时
                     default_minute: 0, //默认分钟
                 },
-                // 点击确定的回调。确定时系统自动调用resetAll()重置
-                callback_confirm: function() {
-                    /*
-                        result = {
-                            title: window_calendar_title.text().replace(" : ", ":"),
-                            hour: 0,
-                            minute: 0
-                        }
-                    */
+                // 点击确定的回调。
+                /*
+                    result = {
+                        title: "12:30",
+                        hour: 12,
+                        minute: 30
+                    }
+                */
+                callback_confirm: function(result) {
 
                 },
-                // 点击取消的回调。取消时系统自动调用resetAll()重置
+                // 点击取消的回调。
                 callback_cancel: function() {
-
                     _this.close.apply(_this);
-                    // _this.resetAll.apply(_this);
 
                     // setTimeout(function() {
                     //     _this.showLayer.apply(_this);
@@ -44,6 +42,8 @@ var TimerScroller_func = function() {
             var opt_data_default = opt_default.data; // 解决data内部分参数不传值的问题
             this.Paras = $.extend(opt_default, opt);
             this.Paras.data = $.extend(opt_data_default, this.Paras.data);
+
+            // console.dir(this.Paras);
 
             // 创建弹层DOM
             // this.createDom.apply(this);
@@ -91,7 +91,7 @@ var TimerScroller_func = function() {
             canvas_bg_line.width = 1;
             canvas_bg_line.height = $(window).width() * 0.11;
             var ctx = canvas_bg_line.getContext("2d");
-            ctx.strokeStyle = "rgb(23,181,228)";
+            ctx.strokeStyle = "rgb(0,0,0)";
             // ctx.strokeStyle = "#ff0000";
             ctx.moveTo(0, 0);
             ctx.lineTo(1, 0);
@@ -172,7 +172,7 @@ var TimerScroller_func = function() {
             window.TimerScroller_dom_bottom_button_confirm
                 .css("border-right", "none")
                 .css("width", "49%")
-                .css("color", "rgb(23,181,228)")
+                .css("color", "rgb(0,0,0)")
                 .text("确定");
             window.TimerScroller_dom_bottom_button_ul.append(window.TimerScroller_dom_bottom_button_confirm);
         },
@@ -184,9 +184,9 @@ var TimerScroller_func = function() {
                 .css("height", "12vw")
                 .css("line-height", "12vw")
                 .css("font-size", "4.5vw")
-                .css("color", "rgb(23,181,228)")
+                .css("color", "rgb(0,0,0)")
                 .css("text-align", "center")
-                .css("border-bottom", "solid 1px rgb(23,181,228)")
+                .css("border-bottom", "solid 1px rgb(0,0,0)")
                 .text(this.getTitleDefault())
                 .prependTo(window.TimerScroller_dom_calendar);
 
@@ -200,7 +200,7 @@ var TimerScroller_func = function() {
                 .css("padding", 0)
                 .css("border", 0)
                 // .css("border","solid 1px #ff0000")
-                .css("color", "rgb(23,181,228)");
+                .css("color", "rgb(0,0,0)");
             var i, len, _obj;
 
             i = 0;
@@ -336,29 +336,28 @@ var TimerScroller_func = function() {
                     hour: 0,
                     minute: 0,
                 };
-                var title_arr = result.title.split(' : ');
+                var title_arr = result.title.split(':');
                 result.hour = parseInt(title_arr[0]);
                 result.minute = parseInt(title_arr[1]);
 
-                _this.resetAll.apply(_this);
+                if(!_this.Paras.callback_confirm_dont_reset_all)
 
                 _this.Paras.callback_confirm(result);
             });
             window.TimerScroller_dom_bottom_button_cancel.unbind().on("touchstart mousedown", function(e) {
                 e.preventDefault();
-
-                _this.resetAll.apply(_this);
                 _this.Paras.callback_cancel.apply(_this);
             });
         },
         // 阻止窗口背景层滚动（弹层时阻止，关闭层时恢复）
         window_scroll_prevent: function(e) {
-            // console.log("here", e.target);
             e.preventDefault();
         },
         // 显示弹层
         show: function(opt) {
             var _this = this;
+
+
 
             window.TimerScroller_dom_calendar_panel.find("li").remove();
             if (window.TimerScroller_dom_calendar_title) {
@@ -384,7 +383,7 @@ var TimerScroller_func = function() {
                 _this.buttonListener.apply(_this);
             });
         },
-        // 关闭弹层
+        // 关闭弹层，调用resetAll()重置jroll对象
         close: function() {
             var _this = this;
 
@@ -392,10 +391,12 @@ var TimerScroller_func = function() {
 
             // 解除对窗口滚动的阻止
             $(window).unbind("touchmove", _this.window_scroll_prevent);
+
+            // 重置jroll对象
+            _this.resetAll.apply(_this);
         },
         // 重置时间到初始状态
         resetAll: function() {
-            // console.log(window.TimerScroller_JRoll_hour.id === undefined);
             if (window.TimerScroller_JRoll_hour) {
 
                 window.TimerScroller_JRoll_hour.scrollTo(0, 0, 200);
